@@ -5,4 +5,6 @@ const app = express();
 
 app.use(express.json());
 
-express.listen(3333);
+app.use(routes);
+
+app.listen(3333);
