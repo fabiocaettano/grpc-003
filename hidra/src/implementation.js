@@ -3,7 +3,7 @@ const User = require('./models/User');
 module.exports = {
 
     async getUserById(call, callback){
-        const { id } = call.request;
+        const { id } = call.request.id;
 
         const user =  await User.findById(id);
 
@@ -11,11 +11,14 @@ module.exports = {
             return callback({error: 'User not found'})
         }        
 
-        return callback(null, { user })
+        return callback(null, { 
+            user : { ... user.toObject(), id: user._id, password: undefined } 
+        });
     },
 
     async registerUser(call, callback){
-        const { email, username, password } = call.request;
+        
+        const { email, username, password } = call.request.user;
 
         const user = await User.create({
             email,
@@ -23,11 +26,16 @@ module.exports = {
             password
         });
 
-        return callback(null,{user});
+        return callback(null, { 
+            user : { ... user.toObject(), id: user._id }  
+        });
     },
 
     async loginUser(call, callback){
-        const { email, password } = call.request;
+
+        console.log('test')
+
+        const { email, password } = call.request.user;
 
         const user = await User.findOne({ email });
 
@@ -40,7 +48,7 @@ module.exports = {
         }
 
         return callback(null,{
-            token: User.generateToken(user)
-        })
-    }   
-}
+            token: User.generateToken(user),
+        });
+    },   
+};
