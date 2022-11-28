@@ -1,10 +1,14 @@
-const HidraService = require('../services/hidra');
+ const HidraService = require('../services/hidra');
 
 class UserController {
 
     async show(req, res){        
         const  { id } = req.params;
+
+        console.log(req.params);
+        
         const response = await new Promise((resolve, reject) => {
+            
             HidraService.getUserById({ id }, (err, response) => {
                 if ( err ){
                     reject(err);
