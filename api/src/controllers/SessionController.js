@@ -1,5 +1,3 @@
-const { promisify } = require('util');
-
 const HidraService  = require('../services/hidra');
 
 class SessionController {
