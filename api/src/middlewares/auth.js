@@ -2,10 +2,11 @@ const HidraService =  require('../services/hidra');
 
 module.exports = async (req, res, next) => {
     try{
-        const response = await Promise((resolve, reject) => {
-            HidraService.authenticate(req.headers.authorization,(err, response) => {
-                if(err){
-                    reject(err);
+        const response = await new Promise((resolve, reject) => {
+            HidraService.authenticate(
+                { token: req.headers.authorization } ,(err, response) => {
+                if(err || response.error ){
+                    reject(err || response.error );
                 }else{
                     resolve(response);
                 }
@@ -16,6 +17,6 @@ module.exports = async (req, res, next) => {
 
         next(); 
     } catch( err ){
-        return res.status(401).send({ error : 'Token Invalid' });
+        return res.status(401).send(err);
     }    
 };

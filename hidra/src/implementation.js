@@ -14,7 +14,7 @@ module.exports = {
         console.log("User:",user);
 
         if (!user){
-            return callback({error: 'User not found'})
+            return callback(null,{error: 'User not found'})
         }        
 
         return callback(null, { 
@@ -46,11 +46,11 @@ module.exports = {
         const user = await User.findOne({ email });
 
         if (!user){
-            return callback({error: 'User not found'})
+            return callback(null,{error: 'User not found'})
         }        
 
         if (!await user.compareHash(password)){
-            return callback({error: 'Invalid password'});
+            return callback(null,{error: 'Invalid password'});
         }
 
         return callback(null,{
@@ -60,32 +60,32 @@ module.exports = {
 
     async authenticate(call, callback){
 
-        const { token } = call.request;
+        const { token: fullToken } = call.request;
 
-        if(!token){
-            callback({erro: 'No token provided'});
+        if(!fullToken){
+            callback(null,{error: 'No token provided'});
         }
 
-        const parts = token.split('');
+        const parts = fullToken.split('');
 
         if (!parts.lentghs === 2){
             return res.status(401).send({error: 'Token error'});
         }
 
-        const [scheme, token2] = parts;
+        const [scheme, token] = parts;
 
         if (!/^Bearer$/i.test(scheme)){
-            return res.status(401).send({erro: 'Token malformatted'});
+            return res.status(401).send(null,{error: 'Token malformatted'});
         }
 
         try{
-            const decoded = await promisify(jwt.verify)(token, authConfig.secret);
+            const decoded = await promisify(jwt.verify)(token, "michele");
 
             const user = await User.findById(decoded.id);
 
             return callback(null,{ user : { ...user.toObject(), id: user._id }});
         }catch(err){
-            callback({error: 'Token Invalid'});
+            callback(null,{error: 'Token Invalid'});
         }
     }
 };

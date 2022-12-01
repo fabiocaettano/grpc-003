@@ -21,7 +21,7 @@
         const purchase = await Purchase.create({ title, value, userId});
 
         return callback(null, {
-            purchase: { ...purchase.toObject(), id: purchase_id },
+            purchase: { ...purchase.toObject(), id: purchase._id },
         })
 
     }

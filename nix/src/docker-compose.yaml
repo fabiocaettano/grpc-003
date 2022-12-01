@@ -6,31 +6,31 @@ networks:
 
 services:
   app:    
-    container_name: service_hidra
+    container_name: service_nix   
     build:
       context: .      
       dockerfile: 'Dockerfile'      
       target: dev
     command: sh -c "npm run dev"
     ports:
-      - 50051:50051
+      - 50052:50052
     networks:
-      - network-grpc 
+      - network-grpc
     env_file:
       - .env
     working_dir: /usr/src/app          
     depends_on:
-      - db_hidra
-  db_hidra:
-    container_name: mongodb_hidra      
+      - db_purchase
+  db_purchase:
+    container_name: mongodb_nix      
     image: mongo
     restart: always
     environment:
       MONGO_INITDB_USERNAME: ${MONGO_USER}
       MONGO_INITDB_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - 27017:27017
+      - 27018:27018
     volumes:
-      - ./data/db-hidra:/data/db      
+      - ./data/db-nix:/data/db      
     networks:
       - network-grpc
