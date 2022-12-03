@@ -5,8 +5,8 @@ networks:
     driver: bridge 
 
 services:
-  app:    
-    container_name: grpc   
+  svc_user:    
+    container_name: service-hidra   
     build:
       context: .      
       dockerfile: 'Dockerfile'      
@@ -20,9 +20,9 @@ services:
       - .env
     working_dir: /usr/src/app          
     depends_on:
-      - db
-  db:
-    container_name: mongodb      
+      - db_user
+  db_user:
+    container_name: mongodb-hidra      
     image: mongo
     restart: always
     environment:
@@ -31,6 +31,6 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./data/db:/data/db      
+      - ./data/db-user:/data/db      
     networks:
       - grpc-network
