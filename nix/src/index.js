@@ -24,4 +24,4 @@ const server = new grpc.Server();
 
 server.addService(proto.PurchaseService.service, implementation);
 
-server.bindAsync('0.0.0.0:50052',grpc.ServerCredentials.createInsecure(), () => { server.start() });
+server.bindAsync('0.0.0.0:50051',grpc.ServerCredentials.createInsecure(), () => { server.start() });
