@@ -5,18 +5,16 @@ const User = require('./models/User');
 module.exports = {
 
     async getUserById(call, callback){
-        const { id } = call.request;
 
-        console.log("id:",id);
+        const { id } = call.request;        
 
-        const user =  await User.findById(id);
+        console.log('call request id:', id);
 
-        console.log("User:",user);
+        const user =  await User.findById(id);        
 
         if (!user){
-            return callback({error: 'User not found'})
-        }        
-
+            return callback(null,{error: 'User not found'})
+        }       
         return callback(null, { 
             user : { ... user.toObject(), id: user._id, password: undefined } 
         });
@@ -39,18 +37,16 @@ module.exports = {
 
     async loginUser(call, callback){
 
-        console.log('test')
-
         const { email, password } = call.request.user;
 
         const user = await User.findOne({ email });
 
         if (!user){
-            return callback({error: 'User not found'})
+            return callback(null,{error: 'User not found'})
         }        
 
         if (!await user.compareHash(password)){
-            return callback({error: 'Invalid password'});
+            return callback(null,{error: 'Invalid password'});
         }
 
         return callback(null,{
@@ -60,32 +56,47 @@ module.exports = {
 
     async authenticate(call, callback){
 
-        const { token } = call.request;
+        console.log('call request',call.request);
 
-        if(!token){
-            callback({erro: 'No token provided'});
+        const {token: fulltoken, id: userId } = call.request;        
+
+        console.log('Hidra UserId:', userId);
+        
+        if(!fulltoken){
+            callback(null,{erro: 'No token provided'});
         }
 
-        const parts = token.split('');
+        const parts = fulltoken.split(' ');        
 
-        if (!parts.lentghs === 2){
-            return res.status(401).send({error: 'Token error'});
+        if (!parts.length === 2){
+            //return res.status(401).send({error: 'Token error'});
+            return callback(null,{code: '401', error: 'Token error'});
         }
 
-        const [scheme, token2] = parts;
-
+        const [scheme, token] = parts;    
+        
         if (!/^Bearer$/i.test(scheme)){
-            return res.status(401).send({erro: 'Token malformatted'});
-        }
+            //return res.status(401).send({erro: 'Token malformatted'});         
+            return callback(null,{code: '401', error: 'Token malformatted'});
+        }        
 
         try{
-            const decoded = await promisify(jwt.verify)(token, authConfig.secret);
+            const decoded = await promisify(jwt.verify)(token,"michele");
 
-            const user = await User.findById(decoded.id);
+            console.log(decoded)
+
+            if (!decoded){
+                return callback(null,{error: 'Error decoded Token'});
+            }
+            
+            const user = await User.findById(userId);
+
+            console.log('user',user);
 
             return callback(null,{ user : { ...user.toObject(), id: user._id }});
+
         }catch(err){
             callback({error: 'Token Invalid'});
         }
-    }
+    }   
 };

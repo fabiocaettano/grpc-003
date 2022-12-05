@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
-    id: Number,
+    id: String,
     email: String,
     username: String,
     password: String,

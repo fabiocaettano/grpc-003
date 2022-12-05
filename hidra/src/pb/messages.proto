@@ -25,10 +25,12 @@ message LoginResponse {
 
 message UserResponse {
     User user = 1;
+    string error = 2;
 }
 
 message AuthenticationRequest {
     string token = 1;
+    string id = 2;
 }
 
 service UserService {
