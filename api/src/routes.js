@@ -14,8 +14,8 @@ router.post('/sessions',SessionController.store);
 router.use(authMiddleware);
 
 router.get('/purchases/:id', PurchaseController.show);
-router.get('/purchases', PurchaseController.store);
-router.get('/purchases',PurchaseController.index);
+router.post('/purchases', PurchaseController.store); 
+router.post('/purchases',PurchaseController.index);
 
 
 module.exports = router;

@@ -2,6 +2,7 @@ const path =  require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const protoConfig = require('../config/proto');
+require('dotenv').config();
 
 const hidraDef = protoLoader.loadSync(
     path.resolve(__dirname, '..','pb','hidra.proto'),
@@ -11,7 +12,7 @@ const hidraDef = protoLoader.loadSync(
 const hidra = grpc.loadPackageDefinition(hidraDef);
 
 const hidraClient = new hidra.UserService(
-    '161.35.1.16:50051',
+    process.env.SERVICE_HIDRA,
     grpc.credentials.createInsecure()
 );
 

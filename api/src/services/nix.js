@@ -2,6 +2,7 @@ const path =  require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const protoConfig = require('../config/proto');
+require('dotenv').config();
 
 const nixDef = protoLoader.loadSync(
     path.resolve(__dirname, '..','pb','nix.proto'),
@@ -11,7 +12,7 @@ const nixDef = protoLoader.loadSync(
 const nix = grpc.loadPackageDefinition(nixDef);
 
 const nixClient = new nix.PurchaseService(
-    '161.35.1.16:50052',
+    process.env.SERVICE_NIX,
     grpc.credentials.createInsecure()
 );
 

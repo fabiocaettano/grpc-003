@@ -3,10 +3,14 @@ const NixService = require('../services/nix');
 class PurchaseController {
     
     async index(req, res) {
+
+        const { userId } = req.body;
+
+        console.log('Controller user ID: ',userId);
         
         const response =  await new Promise((resolve, reject) => {
 
-            NixService.listPurchases({ userId: req.userId }, (err, response) => {
+            NixService.listPurchases({ userId }, (err, response) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -37,12 +41,13 @@ class PurchaseController {
     }
     
     async store(req,res){
-        
-        const { title, value } = req.body;
+
+        const { title, value, userId } = req.body;        
 
         const response = await new Promise((resolve, reject) => {
 
-            NixService.purchase({title, value, userId: req.userId },(err, response) => {
+            NixService.purchase({ purchase : {title, value, userId }},(err, response) => {
+
                 if (err ) {
                     reject(err);
                 } else {
