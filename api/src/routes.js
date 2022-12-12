@@ -15,7 +15,7 @@ router.use(authMiddleware);
 
 router.get('/purchases/:id', PurchaseController.show);
 router.post('/purchases', PurchaseController.store); 
-router.post('/purchases',PurchaseController.index);
+router.get('/purchases',PurchaseController.index);
 
 
 module.exports = router;

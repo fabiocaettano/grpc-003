@@ -2,7 +2,8 @@ const HidraService  = require('../services/hidra');
 
 class SessionController {
 
-    async store(req, res){        
+    async store(req, res){    
+            
         const { email, password } = req.body;      
 
         const response = await new Promise((resolve, reject) => {

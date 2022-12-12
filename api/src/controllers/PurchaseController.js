@@ -4,13 +4,13 @@ class PurchaseController {
     
     async index(req, res) {
 
-        const { userId } = req.body;
+        const  { id } = req.params;
 
-        console.log('Controller user ID: ',userId);
+        console.log(`Purchase Controller ID ${id}`);
         
         const response =  await new Promise((resolve, reject) => {
 
-            NixService.listPurchases({ userId }, (err, response) => {
+            NixService.listPurchases({ id }, (err, response) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -25,6 +25,8 @@ class PurchaseController {
     async show(req, res){  
 
         const { id } = req.params;
+
+        console.log(`Req Params ${id}`);
 
         const response = await new Promise((resolve, reject) => {
 
@@ -43,16 +45,17 @@ class PurchaseController {
     async store(req,res){
 
         const { title, value, userId } = req.body;        
-
+        
         const response = await new Promise((resolve, reject) => {
 
             NixService.purchase({ purchase : {title, value, userId }},(err, response) => {
 
                 if (err ) {
                     reject(err);
-                } else {
+                } else {                    
                     resolve(response);
                 }
+
             });
         });
      
