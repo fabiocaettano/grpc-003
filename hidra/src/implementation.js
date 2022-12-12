@@ -47,10 +47,10 @@ module.exports = {
 
         if (!await user.compareHash(password)){
             return callback(null,{error: 'Invalid password'});
-        }
+        }        
 
-        return callback(null,{
-            token: User.generateToken(user),
+        return callback(null,{          
+            token: User.generateToken({... user.toObject(), id: user._id}),
         });
     },   
 
@@ -58,9 +58,7 @@ module.exports = {
 
         console.log('call request',call.request);
 
-        const {token: fulltoken, id: userId } = call.request;        
-
-        console.log('Hidra UserId:', userId);
+        const {token: fulltoken } = call.request;               
         
         if(!fulltoken){
             callback(null,{erro: 'No token provided'});
@@ -80,20 +78,25 @@ module.exports = {
             return callback(null,{code: '401', error: 'Token malformatted'});
         }        
 
-        try{
-            const decoded = await promisify(jwt.verify)(token,"michele");
+        console.log(`Scheme ${scheme}`);
+        console.log(`Token ${token}`);
 
-            console.log(decoded)
+        try{
+            const decoded = await promisify(jwt.verify)(token,"michele");           
 
             if (!decoded){
                 return callback(null,{error: 'Error decoded Token'});
             }
             
-            const user = await User.findById(userId);
+            console.log(decoded);            
 
-            console.log('user',user);
+            console.log(decoded.id);            
 
-            return callback(null,{ user : { ...user.toObject(), id: user._id }});
+            const user = await User.findById(decoded.id);
+
+            console.log('user',user.toObject());
+
+            return callback(null,{ user : { ...user.toObject() }});
 
         }catch(err){
             callback({error: 'Token Invalid'});

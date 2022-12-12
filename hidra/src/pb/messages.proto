@@ -30,7 +30,6 @@ message UserResponse {
 
 message AuthenticationRequest {
     string token = 1;
-    string id = 2;
 }
 
 service UserService {
