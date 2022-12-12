@@ -9,10 +9,11 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "@grpc/grpc-js": "^1.7.3",
-    "@grpc/proto-loader": "^0.7.3",
-    "mongoose": "^6.7.5",
+  "dependencies": {    
+    "dotenv": "^16.0.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.7.3",
     "nodemon": "^2.0.20",
     "path": "^0.12.7"
   }

@@ -5,7 +5,9 @@ const Purchase =  require('./models/Purchase');
 
         const { id } = call.request;
 
-        const response = await Purchase.findById(id);
+        console.log(`ID: ${id}`);
+
+        const response = await Purchase.findById({ userId : id });
 
         return callback(null, {purchase: response});
     },
@@ -20,8 +22,8 @@ const Purchase =  require('./models/Purchase');
         return callback(null, { purchases });
     },
 
-    async purchase(call, callback){        
-                
+    async purchase(call, callback){                        
+        
         const { title, value, userId } = call.request.purchase;        
 
         const purchase = await Purchase.create({ title, value, userId});
